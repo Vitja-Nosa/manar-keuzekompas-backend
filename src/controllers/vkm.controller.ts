@@ -1,14 +1,17 @@
 import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
-import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
-import { VkmService } from './vkm.service';
+import { IsEnum, IsNumber, IsOptional, IsString, IsArray } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
+import { VkmService } from '../services/vkm.service';
 
 class CreateVkmDto {
-  @IsString() code: string;
-  @IsString() name: string;
-  @IsNumber() ec: number;
-  @IsEnum(['NLQF-5', 'NLQF-6'] as any) level: 'NLQF-5' | 'NLQF-6';
+  @IsOptional() @IsString() code?: string; // vrije "docentcode" (niet verplicht)
+  @IsString() name!: string;
+  @IsNumber() ec!: number;
+  @IsEnum(['NLQF-5', 'NLQF-6'] as any) level!: 'NLQF-5' | 'NLQF-6';
+  @IsOptional() @IsString() location?: string;
   @IsOptional() @IsString() description?: string;
-} 
+}
+class UpdateVkmDto extends PartialType(CreateVkmDto) {}
 
 @Controller('vkm')
 export class VkmController {
@@ -20,12 +23,14 @@ export class VkmController {
     @Query('ec') ec?: string,
     @Query('level') level?: string,
     @Query('name') name?: string,
+    @Query('location') location?: string, 
   ) {
     return this.service.findAll({
       query,
       ec: ec ? Number(ec) : undefined,
       level,
       name,
+      location,
     });
   }
 
@@ -36,11 +41,11 @@ export class VkmController {
 
   @Post()
   create(@Body() dto: CreateVkmDto) {
-    return this.service.create(dto as any);
+    return this.service.create(dto);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: Partial<CreateVkmDto>) {
-    return this.service.update(id, dto as any);
+  update(@Param('id') id: string, @Body() dto: UpdateVkmDto) {
+    return this.service.update(id, dto);
   }
 }

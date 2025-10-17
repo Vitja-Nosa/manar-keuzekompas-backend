@@ -4,11 +4,13 @@ import { Document } from 'mongoose';
 
 @Schema({ timestamps: true, collection: 'vkm_modules' })
 export class Vkm extends Document {
+  @Prop() code?: string;
+  
   @Prop() name: string;
   @Prop() shortdescription?: string;
   @Prop() description?: string;
   @Prop() content?: string;
-  @Prop() studycredit?: number;
+  @Prop() ec?: number;
   @Prop() location?: string;
   @Prop() contact_id?: string;
   @Prop() level?: string;
