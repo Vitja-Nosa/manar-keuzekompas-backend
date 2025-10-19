@@ -11,6 +11,7 @@ function normalizeLevelOut(level?: string) {
 
 // DB-→API
 function toApiModel(doc: any) {
+  
   return {
     _id: doc._id,
     code: String(doc.code ?? doc.id ?? doc._id),           
@@ -29,7 +30,7 @@ function toDbFromDto(dto: {
   code?: string;
   name?: string;
   ec?: number;
-  level?: string;            // verwacht NLQF-5 | NLQF-6
+  level?: string;          
   theme?: string;
   type?: 'verdiepend' | 'verbredend';
   description?: string;
@@ -39,7 +40,7 @@ function toDbFromDto(dto: {
   if (dto.code !== undefined) out.code = dto.code;
   if (dto.name !== undefined) out.name = dto.name;
   if (dto.ec !== undefined) out.ec = Number(dto.ec);
-  if (dto.level !== undefined) out.level = dto.level.replace('-', ''); // sla op als NLQF5 (zoals veel records doen)
+  if (dto.level !== undefined) out.level = dto.level.replace('-', ''); 
   if (dto.theme !== undefined) out.theme = dto.theme;
   if (dto.type !== undefined) out.type = dto.type;
   if (dto.description !== undefined) {
